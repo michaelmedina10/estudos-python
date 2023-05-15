@@ -13,7 +13,7 @@
 print(type(100))
 print(type("string"))
 print(type(10.55))
-
+print('Explícito', 'é', 'melhor " do que implícito')
 # Tipagem forte
 # Não converte automaticamente um tipo
 # O Código abaixo resultaria no erro
