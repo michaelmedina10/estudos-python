@@ -16,7 +16,6 @@ results = []
 
 async def fazer_request(url):
     session = requests.Session()
-    print(url)
     session.verify = False
     respose = await asyncio.get_event_loop().run_in_executor(None, session.get, url)
     return respose.json()
