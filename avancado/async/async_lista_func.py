@@ -5,18 +5,21 @@ async def consulta_banco_1():
     # código da consulta
     df = pd.DataFrame({'coluna1': [1, 2, 3], 'coluna2': ['a', 'b', 'c']})
     df['nome_funcao'] = 'func1'
+    await asyncio.sleep(5)
     return df
 
 async def consulta_banco_2():
     # código da consulta
     df = pd.DataFrame({'coluna1': [4, 5, 6], 'coluna2': ['d', 'e', 'f']})
     df['nome_funcao'] = 'func2'
+    await asyncio.sleep(0.25)
     return df
 
 async def consulta_banco_3():
     # código da consulta
     df = pd.DataFrame({'coluna1': [7, 8, 9], 'coluna2': ['g', 'h', 'i']})
     df['nome_funcao'] = 'func3'
+    await asyncio.sleep(0.25)
     return df
 
 async def executar_consultas_assincronas():

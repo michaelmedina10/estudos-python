@@ -7,26 +7,19 @@ async def fetch_data():
     return {"data": 1}
 
 
-async  def print_numbers():
-    for i in range(10):
+async def print_numbers():
+    for i in range(5):
         print(i)
-        await asyncio.sleep(0.25)
+        await asyncio.sleep(1)
 
 
 async def main():
     task1 = asyncio.create_task(fetch_data())
     task2 = asyncio.create_task(print_numbers())
 
-
     value = await task1
     print(value)
-    # Ele ainda nao terminou a task 2, preciso mandar esperar
     await task2
-    '''
-    Caso eu nao use o Await, o event loop ira fazer o schedule das tasks, executar todos statements e acabar, ele nao vai esperar
-    o termino das tasks
-    '''
-    # print(task1)
 
 
 asyncio.run(main())
@@ -37,3 +30,9 @@ logo, 2 / 0.25 = 8, ou seja vou conseguir printar 8 numeros ate o 'request' esta
 Outro ponto importante é que eu tenho de mandar esperar , pois, caso contrário, iremos retornar uma Future (promisse do JavaScript), indica
 que no futuro pode haver um resultado naquela variavel, mais ainda nao tem.
 '''
+
+'''
+Caso eu nao use o Await, o event loop ira fazer o schedule das tasks, executar todos statements e acabar, ele nao vai esperar
+o termino das tasks
+'''
+# print(task1)
