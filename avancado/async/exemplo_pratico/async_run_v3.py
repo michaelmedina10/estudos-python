@@ -1,33 +1,32 @@
 import asyncio
 import aiohttp
-import requests
 import os
 import time
-import warnings
+
 from dotenv import load_dotenv
-warnings.filterwarnings('ignore')
 load_dotenv()
 
 API_KEY = os.getenv('ALPHA_VANTAGE_KEY')
-url = 'https://www.alphavantage.co/query?function=OVERVIEW&symbol={}&apikey={}'
-symbols = ['AAPL', 'GOOG', 'TSLA', 'MSFT', 'AAPL', 'IBM', 'IBM', 'VALE', 'PETR', 'BBAS', 'ITUB', 'HAPV', 'MGLU', 'PRIO3', 'GGBR']
+
+endpoint = 'https://www.alphavantage.co/query?function=OVERVIEW&symbol={}&apikey={}'
+# 13 chamadas
+lista_acoes = ['AAPL', 'GOOG', 'TSLA', 'MSFT', 'IBM', 'VALE', 'PETR', 'BBAS', 'ITUB', 'HAPV', 'MGLU', 'PRIO3', 'GGBR']
 results = []
 
+async def fazer_requisicao():
+    async with aiohttp.ClientSession() as session:
+        tasks = [session.get(endpoint.format(acoes, API_KEY), ssl=False) for acoes in lista_acoes]
 
-async def fazer_request(url):
-    session = requests.Session()
-    session.verify = False
-    respose = await asyncio.get_event_loop().run_in_executor(None, session.get, url)
-    return respose.json()
+        responses = await asyncio.gather(*tasks)
+        [results.append(await response.json()) for response in responses]
 
+# Asyncio.run() inicia o event loop somente, logo ele pode ser invocado dentro de uma função síncrona
+def main():
+    inicio = time.time()
+    asyncio.run(fazer_requisicao())
+    fim = time.time()
+    tempo_execucao = fim - inicio
+    print("Levou {} segundos para fazer {} chamadas".format(tempo_execucao, len(lista_acoes)))
 
-async def agregador_requisicao():
-    dados = await asyncio.gather(*[fazer_request(url.format(symbol, API_KEY)) for symbol in symbols])
-    return dados
-
-
-inicio = time.time()
-dados = asyncio.run(agregador_requisicao())
-fim = time.time() - inicio
-
-print(f"Tempo de Execução: {fim}")
+if __name__ == '__main__':
+    main()

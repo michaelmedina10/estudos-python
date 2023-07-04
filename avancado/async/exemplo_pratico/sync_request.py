@@ -9,7 +9,7 @@ load_dotenv()
 API_KEY = os.getenv('ALPHA_VANTAGE_KEY')
 
 url = 'https://www.alphavantage.co/query?function=OVERVIEW&symbol={}&apikey={}'
-symbols = ['AAPL', 'GOOG', 'TSLA', 'MSFT', 'PEP']
+symbols = ['AAPL', 'GOOG', 'TSLA', 'MSFT', 'IBM', 'VALE', 'PETR', 'BBAS', 'ITUB', 'HAPV', 'MGLU', 'PRIO3', 'GGBR']
 results = []
 
 
@@ -24,4 +24,4 @@ start = time.time()
 run_tasks()
 end = time.time()
 total_time = end - start
-print("It took {} seconds to make {} API calls".format(total_time, len(symbols)))
+print("Levou {} segundos para fazer {} chamadas sequenciais".format(total_time, len(symbols)))
