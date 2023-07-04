@@ -20,7 +20,7 @@ async def coleta_endpoint():
     print("Terminei de coletar do banco de dados!!")
     return {"data": [{"coletado": "sucesso"}]}
 
-async def main():
+async def executar_consultas():
     inicio = time.time()
     task1 = asyncio.create_task(coleta_banco_1())
     task2 = asyncio.create_task(coleta_banco_2())
@@ -35,4 +35,8 @@ async def main():
     print(resutado3)
     print(f"FIM: {time.time() - inicio}")
 
-asyncio.run(main())
+def main():
+    asyncio.run(executar_consultas())
+
+if __name__ == '__main__':
+    main()
