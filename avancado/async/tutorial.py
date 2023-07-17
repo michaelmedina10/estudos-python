@@ -1,28 +1,31 @@
 import asyncio
 
-async def fetch_data():
-    print("Start fetching")
+async def buscar_dados():
+    print("Iniciando busca...")
     await asyncio.sleep(2)
-    print("done fetching")
+    print("Busca Concluida!!!")
     return {"data": 1}
 
 
-async def print_numbers():
+async def imprimir_numeros():
     for i in range(5):
         print(i)
         await asyncio.sleep(1)
 
 
-async def main():
-    task1 = asyncio.create_task(fetch_data())
-    task2 = asyncio.create_task(print_numbers())
+async def executar_tasks():
+    task1 = asyncio.create_task(buscar_dados())
+    task2 = asyncio.create_task(imprimir_numeros())
 
     value = await task1
     print(value)
     await task2
 
+def principal():
+    asyncio.run(executar_tasks())
 
-asyncio.run(main())
+if __name__ == '__main__':
+    principal()
 
 '''
 fica claro que a primeira task vai levar 2 segundos para executar, enquanto na segunda cada iteracao leva 0.25 seg,
