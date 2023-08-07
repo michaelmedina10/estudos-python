@@ -12,7 +12,7 @@ class Pessoa:
 
     @classmethod
     def metodo_classe(cls):
-        print("SOU MÉTODO PERTENCENTE A CLASE, NÃO PRECISO DE UMA INSTÂNCIA PARA SER CHAMADA")
+        print("SOU MÉTODO PERTENCENTE A CLASSE, NÃO PRECISO DE UMA INSTÂNCIA PARA SER CHAMADA")
 
     # posso usar o classmethod para o padrão factory, um metodo que cria instancias, pois o cls é a propria classe, o molde
     # vamos criar uma classe para gerar pessoas com 50 anos
