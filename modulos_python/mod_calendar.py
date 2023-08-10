@@ -7,6 +7,9 @@
 # o dias são representados de 0 a 6
 
 import calendar
+import locale
+
+locale.setlocale(locale.LC_ALL, 'pt_BR')
 
 print(calendar.calendar(2023))
 print(calendar.month(2023, 7))
