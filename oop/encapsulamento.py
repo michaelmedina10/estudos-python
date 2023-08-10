@@ -5,8 +5,8 @@
 class Foo:
 
     def __init__(self):
-        self.publico = 'PUBLICO'
-        self._protected = 'PORTECTED'
+        self.publico = 'PUBLIC'
+        self._protected = 'PROTECTED'
         self.__private = 'PRIVATE'
 
     def acessar_privado(self):
