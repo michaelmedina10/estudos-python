@@ -5,12 +5,15 @@ Closure e Funções que retornam outra funções
 '''
 
 def criar_saudacao(saudacao: str) -> Callable[[],str]:
+
     def saudar(nome: str) -> str:
         return f'{saudacao}, {nome}!!!'
     return saudar
 
 falar_bom_dia = criar_saudacao("Bom dia")
 falar_boa_noite = criar_saudacao("Bom noite")
+falar_boa_tarde = criar_saudacao("Bom tarde")
+falar_boa_qq = criar_saudacao("Bom qualquer coisa")
 
 '''
 Closure ocorre quando realizamo a chamada da função e ele faz o "fechamento" da função principal:
@@ -23,3 +26,5 @@ quando guardei em uma variável fala_bom_dia e depois invoquei passando o nome M
 '''
 print(falar_bom_dia("Michael"))
 print(falar_boa_noite("Micael L. Jackson"))
+print(falar_boa_noite("Micael L. Jackson"))
+
