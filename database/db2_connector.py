@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 
-import oracledb
+import ibm_db
+from ibm_db_dbi import OperationalError
 
 # Logger desenvolvido a partir da lib logging do python
 from settings.logs import logger
@@ -9,37 +10,23 @@ import pandas as pd
 
 
 @dataclass
-class OracleDBConnection:
-    user: str
-    poracle: str
-    dsn: str
+class Db2Connection:
+    conn_str: str
     connection = None
     cursor = None
 
     def __enter__(self):
-        self.connect()
-        self.cursor = self.connection.cursor()
-        return self
+        try:
+            self.connection = ibm_db.connect(self.conn_str, "", "")
+            logger.info("Connection with DB2 Succeeded")
+            return self
+        except OperationalError as e:
+            logger.critical(f"Error to connect with DB2: {e}")
+            raise
 
     def __exit__(self, exc_type, exc_value, traceback):
-        if self.cursor:
-            self.cursor.close()
         if self.connection:
-            self.connection.close()
-
-    def connect(self):
-        """
-        Start connection with database
-        :return None
-        """
-        try:
-            self.connection = oracledb.connect(
-                user=self.user, password=self.poracle, dsn=self.dsn
-            )
-            logger.info("Connection with Oracle Succeeded")
-        except oracledb.DatabaseError as e:
-            logger.critical(f"Error to connect with Oracle: {e}")
-            raise
+            ibm_db.close(self.connection)
 
     def execute_fetch(self, query: str) -> pd.DataFrame:
         """
@@ -54,13 +41,18 @@ class OracleDBConnection:
         """
 
         try:
-            self.cursor.execute(query)
-            columns = [col[0] for col in self.cursor.description]
-            rows = self.cursor.fetchall()
-            data = [dict(zip(columns, row)) for row in rows]
-            df = pd.DataFrame(data)
+            stmt = ibm_db.exec_immediate(self.connection, query)
+            columns = [column_name for column_name in ibm_db.fetch_assoc(stmt).keys()]
+            rows = []
+            row = ibm_db.fetch_assoc(stmt)  # return first line
+
+            while row:
+                rows.append(row)
+                row = ibm_db.fetch_assoc(stmt)  # return next line
+
+            df = pd.DataFrame(rows, columns=columns)
             return df
-        except oracledb.DatabaseError as e:
+        except (Exception, OperationalError) as e:
             logger.critical(f"Error to execute query: {e}")
             return pd.DataFrame()
 
@@ -77,12 +69,10 @@ class OracleDBConnection:
         """
         try:
             if data is not None:
-                self.cursor.execute(query, data)
-            else:
-                self.cursor.execute(query)
-
+                ibm_db.exec_immediate(self.connection, query, data)
+                ibm_db.commit(self.connection)
             self.connection.commit()
             return True
-        except oracledb.DatabaseError as e:
+        except (Exception, OperationalError) as e:
             logger.critical(f"DML Error: {e}")
             return False
