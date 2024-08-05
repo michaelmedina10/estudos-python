@@ -1,2 +1,0 @@
-Verbos HTTP e quando usar -> Query Params, Route params e body params:
-https://blog.rocketseat.com.br/tipos-de-parametros-nas-requisicoes-rest/#:~:text=%E2%9C%85%20Query%20params&text=Caso%20de%20uso%3A%20Filtros%20para%20fazer%20consultas%20na%20aplica%C3%A7%C3%A3o.&text=No%20exemplo%20acima%20acesso%20o,)%20banks%2C%20filtrando%20por%20name.
