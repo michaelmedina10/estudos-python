@@ -23,3 +23,17 @@ pyenv update
 
 pyenv install <número da versão baixada>
 
+
+Arquitetura hexagonal:
+
+adapter:
+  input:
+    router:
+  output:
+    repositories:
+
+domain:
+  application:
+  model:
+
+infrastructure:
