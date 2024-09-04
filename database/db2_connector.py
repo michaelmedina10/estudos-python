@@ -1,23 +1,21 @@
 from dataclasses import dataclass
 
 import ibm_db
-from ibm_db_dbi import OperationalError
-
-# Logger desenvolvido a partir da lib logging do python
-from settings.logs import logger
-
 import pandas as pd
+from ibm_db_dbi import Connection, OperationalError
+from settings.logs import logger
 
 
 @dataclass
 class Db2Connection:
     conn_str: str
     connection = None
-    cursor = None
+    db_api_connection = None
 
     def __enter__(self):
         try:
             self.connection = ibm_db.connect(self.conn_str, "", "")
+            self.db_api_connection = Connection(self.connection)
             logger.info("Connection with DB2 Succeeded")
             return self
         except OperationalError as e:
@@ -25,8 +23,8 @@ class Db2Connection:
             raise
 
     def __exit__(self, exc_type, exc_value, traceback):
-        if self.connection:
-            ibm_db.close(self.connection)
+        if self.db_api_connection:
+            self.db_api_connection.close()
 
     def execute_fetch(self, query: str) -> pd.DataFrame:
         """
@@ -41,16 +39,7 @@ class Db2Connection:
         """
 
         try:
-            stmt = ibm_db.exec_immediate(self.connection, query)
-            columns = [column_name for column_name in ibm_db.fetch_assoc(stmt).keys()]
-            rows = []
-            row = ibm_db.fetch_assoc(stmt)  # return first line
-
-            while row:
-                rows.append(row)
-                row = ibm_db.fetch_assoc(stmt)  # return next line
-
-            df = pd.DataFrame(rows, columns=columns)
+            df = pd.read_sql(query, self.db_api_connection)
             return df
         except (Exception, OperationalError) as e:
             logger.critical(f"Error to execute query: {e}")
@@ -68,11 +57,13 @@ class Db2Connection:
             bool 1 to success 0 to Fail
         """
         try:
-            if data is not None:
-                ibm_db.exec_immediate(self.connection, query, data)
-                ibm_db.commit(self.connection)
-            self.connection.commit()
-            return True
+            with self.db_api_connection.cursor() as cursor:
+                if data is not None:
+                    cursor.execute(query, data)
+                else:
+                    cursor.execute(query)
+                self.db_api_connection.commit()
+                return True
         except (Exception, OperationalError) as e:
             logger.critical(f"DML Error: {e}")
             return False
