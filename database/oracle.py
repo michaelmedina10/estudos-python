@@ -1,11 +1,8 @@
 from dataclasses import dataclass
 
 import oracledb
-
-# Logger desenvolvido a partir da lib logging do python
-from settings.logs import logger
-
 import pandas as pd
+from settings.logs import logger
 
 
 @dataclass
