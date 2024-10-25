@@ -6,8 +6,6 @@ https://blog.rocketseat.com.br/tipos-de-parametros-nas-requisicoes-rest/#:~:text
 git clone https://github.com/pyenv/pyenv.git ~/.pyenv
 git clone https://github.com/pyenv/pyenv-update.git $(pyenv root)/plugins/pyenv-update
 
-pyenv update
-
 .bashrc
 > export PYENV_ROOT="$HOME/.pyenv"
 > command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
@@ -21,6 +19,7 @@ pyenv update
 
 > sudo zypper install gcc readline-devel libbz2-devel libopenssl-1_1-devel libopenssl-devel ncurses-devel readline-devel sqlite3-devel tack zlib-devel lzma-sdk-devel tk-devel xz-devel
 
+pyenv update
 pyenv install <número da versão baixada>
 
 
